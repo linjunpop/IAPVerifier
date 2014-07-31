@@ -1,0 +1,13 @@
+{
+  "name": "IAPVerifier",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "coffee app.coffee --nodejs"
+  },
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "apiserver": "~0.3.1",
+    "iap_verifier": "~0.0.11"
+  }
+}
