@@ -9,18 +9,17 @@ apiServer.addModule "1", "verificationModule",
   verify:
     get: (request, response) ->
       response.serveJSON
-        id: request.querystring.id
-        verbose: request.querystring.verbose
-        method: "GET"
+        message: "Please use POST to verify receipt"
 
     post: (request, response) ->
       request.resume()
       request.once "end", ->
         if request.parseError
           console.error request.parseError.message
-          response.serveJSON
-            error: "Ivalid request foramt"
-            message: request.parseError.message
+          response.serveJSON(
+            { message: request.parseError.message }
+            { httpStatusCode: 400, httpStatusMessage: 'Bad request' }
+          )
         else
           # request: { data: 'Base64 encodded receipt' }
           receipt = request.body.data
