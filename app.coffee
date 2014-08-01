@@ -1,7 +1,10 @@
 ApiServer = require("apiserver")
 IAPVerifier = require("iap_verifier")
 
-apiServer = new ApiServer(port: 8080)
+Dotenv = require('dotenv')
+Dotenv.load()
+
+apiServer = new ApiServer(port: process.env.PORT)
 apiServer.use ApiServer.payloadParser()
 
 # modules
@@ -24,18 +27,16 @@ apiServer.addModule "1", "verificationModule",
           # request: { data: 'Base64 encodded receipt' }
           receipt = request.body.data
 
-          # TODO: This can be found on the itunes connect page for the applications' in app purchases.
-          itunes_shared_secret = ""
-          client = new IAPVerifier(itunes_shared_secret, true)
+          client = new IAPVerifier(process.env.ITUNES_SHARED_SECRET, true)
           client.verifyReceipt receipt, isBase64 = true, (valid, msg, data) ->
             if valid
               response.serveJSON data
             else
               console.error("Invalid receipt: #{msg}, data: #{data}")
-              response.serveJSON(
-                { }
-                { httpStatusCode: 422, httpStatusMessage: 'Unprocessable entity' }
-              )
+              response.serveJSON( null, {
+                httpStatusCode: 422,
+                httpStatusMessage: 'Unprocessable entity'
+              })
 
 # custom routing
 apiServer.router.addRoutes [
@@ -44,12 +45,12 @@ apiServer.router.addRoutes [
 
 # events
 apiServer.on("requestStart", (pathname, time) ->
-  console.info " ☉ :: start    :: %s", pathname
+  console.info ":: start    :: %s", pathname
 ).on("requestEnd", (pathname, time) ->
-  console.info " ☺ :: end      :: %s in %dms", pathname, time
+  console.info ":: end      :: %s in %dms", pathname, time
 ).on("error", (pathname, err) ->
-  console.info " ☹ :: error    :: %s (%s)", pathname, err.message
+  console.error ":: error    :: %s (%s)", pathname, err.message
 ).on "timeout", (pathname) ->
-  console.info " ☂ :: timedout :: %s", pathname
+  console.error ":: timedout :: %s", pathname
 
 apiServer.listen()
