@@ -4,10 +4,11 @@ IAPVerifier = require("iap_verifier")
 Dotenv = require('dotenv')
 Dotenv.load()
 
+db = require('./models')
+
 apiServer = new ApiServer(port: process.env.PORT)
 apiServer.use ApiServer.payloadParser()
 
-# modules
 apiServer.addModule "1", "verificationModule",
   verify:
     get: (request, response) ->
@@ -30,9 +31,12 @@ apiServer.addModule "1", "verificationModule",
           client = new IAPVerifier(process.env.ITUNES_SHARED_SECRET, true)
           client.verifyReceipt receipt, isBase64 = true, (valid, msg, data) ->
             if valid
+              db.Receipt.create({request_content: receipt, response_content: JSON.stringify(data)})
+                .success ->
+                  console.info "Receipt created"
               response.serveJSON data
             else
-              console.error("Invalid receipt: #{msg}, data: #{data}")
+              console.error("Invalid receipt: #{msg}, data: #{JSON.stringify(data)}")
               response.serveJSON( null, {
                 httpStatusCode: 422,
                 httpStatusMessage: 'Unprocessable entity'
@@ -53,4 +57,8 @@ apiServer.on("requestStart", (pathname, time) ->
 ).on "timeout", (pathname) ->
   console.error ":: timedout :: %s", pathname
 
-apiServer.listen()
+db.sequelize.sync().complete (err) ->
+  if err
+    throw err[0]
+  else
+    apiServer.listen()
