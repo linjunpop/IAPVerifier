@@ -1,3 +1,4 @@
+Newrelic = require('newrelic')
 IAPVerifier = require("iap_verifier")
 Hapi = require('hapi')
 Good = require('good')
