@@ -8,7 +8,7 @@ Good = require('good')
 
 db = require('./models')
 
-server = new Hapi.Server(process.env.PORT);
+server = new Hapi.Server(process.env.PORT)
 
 server.route
   method: 'GET'
@@ -37,7 +37,6 @@ server.route
         else
           server.log(['warning'], "Invalid receipt: #{msg}, data: #{JSON.stringify(data)}")
           reply Hapi.error.badData('Invalid receipt')
-
 
 server.pack.register Good, (err)->
   if err
