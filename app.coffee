@@ -1,12 +1,13 @@
 Dotenv = require('dotenv')
 Dotenv.load()
 
+Path = require('path')
 Newrelic = require('newrelic')
 IAPVerifier = require("iap_verifier")
 Hapi = require('hapi')
 Good = require('good')
 
-db = require('./models')
+db = require(Path.join(__dirname, 'models'))
 
 server = new Hapi.Server(process.env.PORT)
 
