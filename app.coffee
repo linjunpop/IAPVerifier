@@ -1,14 +1,20 @@
+Dotenv = require('dotenv')
+Dotenv.load()
+
 Newrelic = require('newrelic')
 IAPVerifier = require("iap_verifier")
 Hapi = require('hapi')
 Good = require('good')
-Dotenv = require('dotenv')
-
-Dotenv.load()
 
 db = require('./models')
 
 server = new Hapi.Server(process.env.PORT);
+
+server.route
+  method: 'GET'
+  path: '/'
+  handler: (request, reply)->
+    reply "iOS In-App Purchase verification service."
 
 server.route
   method: 'GET'
@@ -30,7 +36,7 @@ server.route
           reply data
         else
           server.log(['warning'], "Invalid receipt: #{msg}, data: #{JSON.stringify(data)}")
-          reply Hapi.error.badData('Invalid receipt');
+          reply Hapi.error.badData('Invalid receipt')
 
 
 server.pack.register Good, (err)->
