@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node_modules/coffee-script/bin/coffee app.coffee --nodejs"
+    "start": "node_modules/coffee-script/bin/coffee app.coffee --nodejs",
+    "db:migrate": "node_modules/sequelize/bin/sequelize -m",
+    "db:rollback": "node_modules/sequelize/bin/sequelize -m -u"
   },
   "dependencies": {
     "coffee-script": "~1.7.1",
