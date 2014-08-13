@@ -11,3 +11,5 @@ A node.js project
 
 * Migrate: `$ npm run-script db:migrate`
 * Rollback : `$ npm run-script db:rollback`
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)

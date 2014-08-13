@@ -1,0 +1,18 @@
+{
+  "name": "IAPVerifier",
+  "description": "Verify iOS In-App Purchase receipt",
+  "repository": "https://github.com/linjunpop/IAPVerifier",
+  "success_url": "/",
+  "keywords": ["node", "iOS", "In-App Purchase"],
+  "addons": ["heroku-postgresql", "newrelic", "papertrail"],
+  "env": {
+    "NODE_ENV": "production",
+    "NEW_RELIC_APP_NAME": {
+      "description": "New Relic App name",
+      "value": "IAPVerifier"
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run-script db:migrate"
+  }
+}
